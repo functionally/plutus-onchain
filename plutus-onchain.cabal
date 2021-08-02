@@ -1,0 +1,42 @@
+cabal-version     : 2.4
+name              : plutus-onchain
+description       : Miscellaneous functions for use in Plutus validators.
+version           : 0.1.0.0
+author            : Brian W Bush <code@functionally.io>
+maintainer        : Brian W Bush <code@functionally.io>
+copyright         : (c) 2021 Brian W Bush
+license           : MIT
+license-file      : LICENSE
+
+homepage   : https://github.com/functionally/plutus-validator/ReadMe.md
+bug-reports: https://github.com/functionally/plutus-validator/issues/
+
+source-repository head
+  type    : git
+  location: https://github.com/functionally/plutus-validator.git
+
+library
+  hs-source-dirs  : src
+  exposed-modules : Plutus.OnChain.Random
+  build-depends   : base ^>=4.14.1.0
+                  , aeson
+                  , bytestring
+                  , containers
+                  , data-default
+                  , freer-extras
+                  , freer-simple
+                  , playground-common
+                  , plutus-contract
+                  , plutus-ledger
+                  , plutus-pab
+                  , plutus-tx
+                  , plutus-tx-plugin
+                  , plutus-use-cases
+                  , prettyprinter
+                  , req ^>= 3.9.0
+                  , serialise
+                  , text
+                  , uuid
+                  , vector
+  default-language: Haskell2010
+  ghc-options     : -fplugin-opt PlutusTx.Plugin:defer-errors -fobject-code -fno-ignore-interface-pragmas -fno-omit-interface-pragmas -fno-strictness -fno-spec-constr -fno-specialise -Wall
