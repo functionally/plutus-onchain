@@ -15,34 +15,35 @@
 </span><span id="line-15"></span><span>
 </span><span id="line-16"></span><span class="hs-pragma">{-# LANGUAGE NoImplicitPrelude #-}</span><span>
 </span><span id="line-17"></span><span class="hs-pragma">{-# LANGUAGE RecordWildCards   #-}</span><span>
-</span><span id="line-18"></span><span>
+</span><span id="line-18"></span><span class="hs-pragma">{-# LANGUAGE Trustworthy       #-}</span><span>
 </span><span id="line-19"></span><span>
-</span><span id="line-20"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Plutus.OnChain.Random</span><span> </span><span class="hs-special">(</span><span>
-</span><span id="line-21"></span><span class="annot"><span class="hs-comment">-- * Types</span></span><span>
-</span><span id="line-22"></span><span>  </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier">RandomGenerator</span></a></span><span>
-</span><span id="line-23"></span><span class="annot"><span class="hs-comment">-- * Functions</span></span><span>
-</span><span id="line-24"></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier">makeRandomGenerator</span></a></span><span>
-</span><span id="line-25"></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier">nextInteger64</span></a></span><span>
-</span><span id="line-26"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-27"></span><span>
+</span><span id="line-20"></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Plutus.OnChain.Random</span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-22"></span><span class="annot"><span class="hs-comment">-- * Types</span></span><span>
+</span><span id="line-23"></span><span>  </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier">RandomGenerator</span></a></span><span>
+</span><span id="line-24"></span><span class="annot"><span class="hs-comment">-- * Functions</span></span><span>
+</span><span id="line-25"></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier">makeRandomGenerator</span></a></span><span>
+</span><span id="line-26"></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier">nextInteger64</span></a></span><span>
+</span><span id="line-27"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">PlutusTx.Prelude</span></span><span>
-</span><span id="line-30"></span><span>
-</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Plutus.OnChain.Bits.html"><span class="hs-identifier">Plutus.OnChain.Bits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Plutus.OnChain.Bits.html#xor"><span class="hs-identifier">xor</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span>
-</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span>
-</span><span id="line-34"></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">PlutusTx.Prelude</span></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Plutus.OnChain.Bits.html"><span class="hs-identifier">Plutus.OnChain.Bits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Plutus.OnChain.Bits.html#xor"><span class="hs-identifier">xor</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span>
 </span><span id="line-35"></span><span>
-</span><span id="line-36"></span><span class="hs-comment">-- | A splittable random-number generator. See &lt;https://doi.org/10.1145/2660193.2660195&gt; and the &quot;splitmix&quot; Haskell package.</span><span>
-</span><span id="line-37"></span><span class="hs-keyword">data</span><span> </span><span id="RandomGenerator"><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-var">RandomGenerator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-38"></span><span>  </span><span id="RandomGenerator"><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-var">RandomGenerator</span></a></span></span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-special">{</span><span>
-</span><span id="line-40"></span><span>    </span><span id="seed"><span class="annot"><span class="annottext">RandomGenerator -&gt; Integer
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | A splittable random-number generator. See &lt;https://doi.org/10.1145/2660193.2660195&gt; and the &quot;splitmix&quot; Haskell package.</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">data</span><span> </span><span id="RandomGenerator"><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-var">RandomGenerator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-39"></span><span>  </span><span id="RandomGenerator"><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-var">RandomGenerator</span></a></span></span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-special">{</span><span>
+</span><span id="line-41"></span><span>    </span><span id="seed"><span class="annot"><span class="annottext">RandomGenerator -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#seed"><span class="hs-identifier hs-var hs-var">seed</span></a></span></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The seed.</span><span>
-</span><span id="line-41"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="gamma"><span class="annot"><span class="annottext">RandomGenerator -&gt; Integer
+</span><span id="line-42"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="gamma"><span class="annot"><span class="annottext">RandomGenerator -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#gamma"><span class="hs-identifier hs-var hs-var">gamma</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The gamma constant.</span><span>
-</span><span id="line-42"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-43"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679061145"><span id="local-6989586621679061147"><span id="local-6989586621679061149"><span class="annot"><span class="annottext">Int -&gt; RandomGenerator -&gt; ShowS
+</span><span id="line-43"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-44"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679061226"><span id="local-6989586621679061228"><span id="local-6989586621679061230"><span class="annot"><span class="annottext">Int -&gt; RandomGenerator -&gt; ShowS
 [RandomGenerator] -&gt; ShowS
 RandomGenerator -&gt; String
 (Int -&gt; RandomGenerator -&gt; ShowS)
@@ -58,147 +59,147 @@ $cshow :: RandomGenerator -&gt; String
 showsPrec :: Int -&gt; RandomGenerator -&gt; ShowS
 $cshowsPrec :: Int -&gt; RandomGenerator -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Prelude.Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-44"></span><span>
 </span><span id="line-45"></span><span>
-</span><span id="line-46"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-pragma hs-type">makeRandomGenerator</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span class="hs-comment">-- | Initialize the random-number generator.</span><span>
-</span><span id="line-49"></span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier hs-type">makeRandomGenerator</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>         </span><span class="hs-comment">-- ^ The seed.</span><span>
-</span><span id="line-50"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
-</span><span id="line-51"></span><span id="makeRandomGenerator"><span class="annot"><span class="annottext">makeRandomGenerator :: Integer -&gt; RandomGenerator
-</span><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier hs-var hs-var">makeRandomGenerator</span></a></span></span><span> </span><span id="local-6989586621679061143"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061143"><span class="hs-identifier hs-var">seed</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-52"></span><span>  </span><span class="annot"><span class="annottext">RandomGenerator :: Integer -&gt; Integer -&gt; RandomGenerator
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-pragma hs-type">makeRandomGenerator</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | Initialize the random-number generator.</span><span>
+</span><span id="line-50"></span><span class="annot"><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier hs-type">makeRandomGenerator</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>         </span><span class="hs-comment">-- ^ The seed.</span><span>
+</span><span id="line-51"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
+</span><span id="line-52"></span><span id="makeRandomGenerator"><span class="annot"><span class="annottext">makeRandomGenerator :: Integer -&gt; RandomGenerator
+</span><a href="Plutus.OnChain.Random.html#makeRandomGenerator"><span class="hs-identifier hs-var hs-var">makeRandomGenerator</span></a></span></span><span> </span><span id="local-6989586621679061224"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061224"><span class="hs-identifier hs-var">seed</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-53"></span><span>  </span><span class="annot"><span class="annottext">RandomGenerator :: Integer -&gt; Integer -&gt; RandomGenerator
 </span><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-special">{</span><span>
-</span><span id="line-54"></span><span>    </span><span class="annot"><span class="annottext">seed :: Integer
+</span><span id="line-54"></span><span>  </span><span class="hs-special">{</span><span>
+</span><span id="line-55"></span><span>    </span><span class="annot"><span class="annottext">seed :: Integer
 </span><a href="Plutus.OnChain.Random.html#seed"><span class="hs-identifier hs-var">seed</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var">truncate64</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061143"><span class="hs-identifier hs-var">seed</span></a></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">gamma :: Integer
+</span><a href="#local-6989586621679061224"><span class="hs-identifier hs-var">seed</span></a></span><span>
+</span><span id="line-56"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">gamma :: Integer
 </span><a href="Plutus.OnChain.Random.html#gamma"><span class="hs-identifier hs-var">gamma</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061141"><span class="hs-identifier hs-var">goldenGamma</span></a></span><span>
-</span><span id="line-56"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-57"></span><span>    </span><span class="hs-keyword">where</span><span>
-</span><span id="line-58"></span><span>      </span><span id="local-6989586621679061141"><span class="annot"><span class="annottext">goldenGamma :: Integer
-</span><a href="#local-6989586621679061141"><span class="hs-identifier hs-var hs-var">goldenGamma</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061222"><span class="hs-identifier hs-var">goldenGamma</span></a></span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-58"></span><span>    </span><span class="hs-keyword">where</span><span>
+</span><span id="line-59"></span><span>      </span><span id="local-6989586621679061222"><span class="annot"><span class="annottext">goldenGamma :: Integer
+</span><a href="#local-6989586621679061222"><span class="hs-identifier hs-var hs-var">goldenGamma</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0x9e3779b97f4a7c15</span></span><span>
-</span><span id="line-59"></span><span>
 </span><span id="line-60"></span><span>
-</span><span id="line-61"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-pragma hs-type">nextInteger64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-62"></span><span>
-</span><span id="line-63"></span><span class="hs-comment">-- | Return the next 64-bit non-negative integer.</span><span>
-</span><span id="line-64"></span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier hs-type">nextInteger64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span>            </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
-</span><span id="line-65"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-comment">-- ^ The random number and the modified random-number generator.</span><span>
-</span><span id="line-66"></span><span id="nextInteger64"><span class="annot"><span class="annottext">nextInteger64 :: RandomGenerator -&gt; (Integer, RandomGenerator)
-</span><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier hs-var hs-var">nextInteger64</span></a></span></span><span> </span><span id="local-6989586621679061140"><span class="annot"><span class="annottext">RandomGenerator
-</span><a href="#local-6989586621679061140"><span class="hs-identifier hs-var">rg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-67"></span><span>  </span><span class="hs-keyword">let</span><span>
-</span><span id="line-68"></span><span>    </span><span id="local-6989586621679061139"><span class="annot"><span class="annottext">rg' :: RandomGenerator
-</span><a href="#local-6989586621679061139"><span class="hs-identifier hs-var hs-var">rg'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RandomGenerator -&gt; RandomGenerator
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-pragma hs-type">nextInteger64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- | Return the next 64-bit non-negative integer.</span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier hs-type">nextInteger64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span>            </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
+</span><span id="line-66"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-comment">-- ^ The random number and the modified random-number generator.</span><span>
+</span><span id="line-67"></span><span id="nextInteger64"><span class="annot"><span class="annottext">nextInteger64 :: RandomGenerator -&gt; (Integer, RandomGenerator)
+</span><a href="Plutus.OnChain.Random.html#nextInteger64"><span class="hs-identifier hs-var hs-var">nextInteger64</span></a></span></span><span> </span><span id="local-6989586621679061221"><span class="annot"><span class="annottext">RandomGenerator
+</span><a href="#local-6989586621679061221"><span class="hs-identifier hs-var">rg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-keyword">let</span><span>
+</span><span id="line-69"></span><span>    </span><span id="local-6989586621679061220"><span class="annot"><span class="annottext">rg' :: RandomGenerator
+</span><a href="#local-6989586621679061220"><span class="hs-identifier hs-var hs-var">rg'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RandomGenerator -&gt; RandomGenerator
 </span><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-identifier hs-var">nextSeed</span></a></span><span> </span><span class="annot"><span class="annottext">RandomGenerator
-</span><a href="#local-6989586621679061140"><span class="hs-identifier hs-var">rg</span></a></span><span>
-</span><span id="line-69"></span><span>  </span><span class="hs-keyword">in</span><span>
-</span><span id="line-70"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer
+</span><a href="#local-6989586621679061221"><span class="hs-identifier hs-var">rg</span></a></span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-keyword">in</span><span>
+</span><span id="line-71"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-identifier hs-var">mix64</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer) -&gt; Integer -&gt; Integer
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">RandomGenerator -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#seed"><span class="hs-identifier hs-var hs-var">seed</span></a></span><span> </span><span class="annot"><span class="annottext">RandomGenerator
-</span><a href="#local-6989586621679061139"><span class="hs-identifier hs-var">rg'</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">RandomGenerator
-</span><a href="#local-6989586621679061139"><span class="hs-identifier hs-var">rg'</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-71"></span><span>
+</span><a href="#local-6989586621679061220"><span class="hs-identifier hs-var">rg'</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">RandomGenerator
+</span><a href="#local-6989586621679061220"><span class="hs-identifier hs-var">rg'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-72"></span><span>
-</span><span id="line-73"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-pragma hs-type">nextSeed</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-74"></span><span>      </span><span>
-</span><span id="line-75"></span><span class="hs-comment">-- | Update the random-number generator with its next seed.</span><span>
-</span><span id="line-76"></span><span class="annot"><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-identifier hs-type">nextSeed</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
-</span><span id="line-77"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The modified random-number generator.</span><span>
-</span><span id="line-78"></span><span id="nextSeed"><span class="annot"><span class="annottext">nextSeed :: RandomGenerator -&gt; RandomGenerator
-</span><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-identifier hs-var hs-var">nextSeed</span></a></span></span><span> </span><span id="local-6989586621679061135"><span class="annot"><span class="annottext">rg :: RandomGenerator
-</span><a href="#local-6989586621679061135"><span class="hs-identifier hs-var">rg</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span class="hs-special">{</span><span id="local-6989586621679061133"><span id="local-6989586621679061134"><span class="annot"><span class="annottext">Integer
+</span><span id="line-73"></span><span>
+</span><span id="line-74"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-pragma hs-type">nextSeed</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-75"></span><span>      </span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- | Update the random-number generator with its next seed.</span><span>
+</span><span id="line-77"></span><span class="annot"><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-identifier hs-type">nextSeed</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The random-number generator.</span><span>
+</span><span id="line-78"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span> </span><span class="hs-comment">-- ^ The modified random-number generator.</span><span>
+</span><span id="line-79"></span><span id="nextSeed"><span class="annot"><span class="annottext">nextSeed :: RandomGenerator -&gt; RandomGenerator
+</span><a href="Plutus.OnChain.Random.html#nextSeed"><span class="hs-identifier hs-var hs-var">nextSeed</span></a></span></span><span> </span><span id="local-6989586621679061216"><span class="annot"><span class="annottext">rg :: RandomGenerator
+</span><a href="#local-6989586621679061216"><span class="hs-identifier hs-var">rg</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Plutus.OnChain.Random.html#RandomGenerator"><span class="hs-identifier hs-type">RandomGenerator</span></a></span><span class="hs-special">{</span><span id="local-6989586621679061214"><span id="local-6989586621679061215"><span class="annot"><span class="annottext">Integer
 gamma :: Integer
 seed :: Integer
 gamma :: RandomGenerator -&gt; Integer
 seed :: RandomGenerator -&gt; Integer
-</span><a href="#local-6989586621679061133"><span class="hs-glyph hs-var hs-var hs-var hs-var">..</span></a></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-79"></span><span>  </span><span class="annot"><span class="annottext">RandomGenerator
-</span><a href="#local-6989586621679061135"><span class="hs-identifier hs-var">rg</span></a></span><span>
-</span><span id="line-80"></span><span>  </span><span class="hs-special">{</span><span>
-</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">seed :: Integer
+</span><a href="#local-6989586621679061214"><span class="hs-glyph hs-var hs-var hs-var hs-var">..</span></a></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-80"></span><span>  </span><span class="annot"><span class="annottext">RandomGenerator
+</span><a href="#local-6989586621679061216"><span class="hs-identifier hs-var">rg</span></a></span><span>
+</span><span id="line-81"></span><span>  </span><span class="hs-special">{</span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">seed :: Integer
 </span><a href="Plutus.OnChain.Random.html#seed"><span class="hs-identifier hs-var">seed</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var">truncate64</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer) -&gt; Integer -&gt; Integer
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061134"><span class="hs-identifier hs-var">seed</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+</span><a href="#local-6989586621679061215"><span class="hs-identifier hs-var">seed</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 forall a. AdditiveSemigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061133"><span class="hs-identifier hs-var">gamma</span></a></span><span>
-</span><span id="line-82"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-83"></span><span>
+</span><a href="#local-6989586621679061214"><span class="hs-identifier hs-var">gamma</span></a></span><span>
+</span><span id="line-83"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-84"></span><span>
-</span><span id="line-85"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-pragma hs-type">mix64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-86"></span><span>
-</span><span id="line-87"></span><span class="hs-comment">-- | Mix bits of a 64-bit non-negative integer.</span><span>
-</span><span id="line-88"></span><span class="annot"><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-identifier hs-type">mix64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ Before mixing.</span><span>
-</span><span id="line-89"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ After mixing.</span><span>
-</span><span id="line-90"></span><span id="mix64"><span class="annot"><span class="annottext">mix64 :: Integer -&gt; Integer
-</span><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-identifier hs-var hs-var">mix64</span></a></span></span><span> </span><span id="local-6989586621679061131"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061131"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-91"></span><span>  </span><span class="hs-keyword">let</span><span>
-</span><span id="line-92"></span><span>    </span><span id="local-6989586621679061130"><span class="annot"><span class="annottext">xorShift :: Integer -&gt; Integer
-</span><a href="#local-6989586621679061130"><span class="hs-identifier hs-var hs-var">xorShift</span></a></span></span><span> </span><span id="local-6989586621679061129"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061129"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061129"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+</span><span id="line-85"></span><span>
+</span><span id="line-86"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-pragma hs-type">mix64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-87"></span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- | Mix bits of a 64-bit non-negative integer.</span><span>
+</span><span id="line-89"></span><span class="annot"><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-identifier hs-type">mix64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ Before mixing.</span><span>
+</span><span id="line-90"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ After mixing.</span><span>
+</span><span id="line-91"></span><span id="mix64"><span class="annot"><span class="annottext">mix64 :: Integer -&gt; Integer
+</span><a href="Plutus.OnChain.Random.html#mix64"><span class="hs-identifier hs-var hs-var">mix64</span></a></span></span><span> </span><span id="local-6989586621679061212"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061212"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-92"></span><span>  </span><span class="hs-keyword">let</span><span>
+</span><span id="line-93"></span><span>    </span><span id="local-6989586621679061211"><span class="annot"><span class="annottext">xorShift :: Integer -&gt; Integer
+</span><a href="#local-6989586621679061211"><span class="hs-identifier hs-var hs-var">xorShift</span></a></span></span><span> </span><span id="local-6989586621679061210"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061210"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061210"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Bits.html#xor"><span class="hs-operator hs-var">`xor`</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-identifier hs-var">shift33</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061129"><span class="hs-identifier hs-var">w</span></a></span><span>
-</span><span id="line-93"></span><span>    </span><span id="local-6989586621679061127"><span class="annot"><span class="annottext">z' :: Integer
-</span><a href="#local-6989586621679061127"><span class="hs-identifier hs-var hs-var">z'</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
+</span><a href="#local-6989586621679061210"><span class="hs-identifier hs-var">w</span></a></span><span>
+</span><span id="line-94"></span><span>    </span><span id="local-6989586621679061208"><span class="annot"><span class="annottext">z' :: Integer
+</span><a href="#local-6989586621679061208"><span class="hs-identifier hs-var hs-var">z'</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var">truncate64</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer) -&gt; Integer -&gt; Integer
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
-</span><a href="#local-6989586621679061130"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061131"><span class="hs-identifier hs-var">z</span></a></span><span>  </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+</span><a href="#local-6989586621679061211"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061212"><span class="hs-identifier hs-var">z</span></a></span><span>  </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 forall a. MultiplicativeSemigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0xff51afd7ed558ccd</span></span><span>
-</span><span id="line-94"></span><span>    </span><span id="local-6989586621679061125"><span class="annot"><span class="annottext">z'' :: Integer
-</span><a href="#local-6989586621679061125"><span class="hs-identifier hs-var hs-var">z''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
+</span><span id="line-95"></span><span>    </span><span id="local-6989586621679061206"><span class="annot"><span class="annottext">z'' :: Integer
+</span><a href="#local-6989586621679061206"><span class="hs-identifier hs-var hs-var">z''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var">truncate64</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer) -&gt; Integer -&gt; Integer
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
-</span><a href="#local-6989586621679061130"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061127"><span class="hs-identifier hs-var">z'</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+</span><a href="#local-6989586621679061211"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061208"><span class="hs-identifier hs-var">z'</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 forall a. MultiplicativeSemigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0xc4ceb9fe1a85ec53</span></span><span>
-</span><span id="line-95"></span><span>  </span><span class="hs-keyword">in</span><span>
-</span><span id="line-96"></span><span>    </span><span class="annot"><span class="annottext">Integer -&gt; Integer
+</span><span id="line-96"></span><span>  </span><span class="hs-keyword">in</span><span>
+</span><span id="line-97"></span><span>    </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var">truncate64</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer) -&gt; Integer -&gt; Integer
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
-</span><a href="#local-6989586621679061130"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679061125"><span class="hs-identifier hs-var">z''</span></a></span><span>
-</span><span id="line-97"></span><span>
+</span><a href="#local-6989586621679061211"><span class="hs-identifier hs-var">xorShift</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679061206"><span class="hs-identifier hs-var">z''</span></a></span><span>
 </span><span id="line-98"></span><span>
-</span><span id="line-99"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-pragma hs-type">shift33</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-100"></span><span>
-</span><span id="line-101"></span><span class="hs-comment">-- | Shift a non-negative integer to the right by 33 bits.</span><span>
-</span><span id="line-102"></span><span class="annot"><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-identifier hs-type">shift33</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The integer.</span><span>
-</span><span id="line-103"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The right-shifted integer.</span><span>
-</span><span id="line-104"></span><span id="shift33"><span class="annot"><span class="annottext">shift33 :: Integer -&gt; Integer
+</span><span id="line-99"></span><span>
+</span><span id="line-100"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-pragma hs-type">shift33</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- | Shift a non-negative integer to the right by 33 bits.</span><span>
+</span><span id="line-103"></span><span class="annot"><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-identifier hs-type">shift33</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The integer.</span><span>
+</span><span id="line-104"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The right-shifted integer.</span><span>
+</span><span id="line-105"></span><span id="shift33"><span class="annot"><span class="annottext">shift33 :: Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#shift33"><span class="hs-identifier hs-var hs-var">shift33</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 </span><span class="hs-operator hs-var">`divide`</span></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0x200000000</span></span><span class="hs-special">)</span><span>
-</span><span id="line-105"></span><span>
 </span><span id="line-106"></span><span>
-</span><span id="line-107"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-pragma hs-type">truncate64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-108"></span><span>
-</span><span id="line-109"></span><span class="hs-comment">-- | Discard all but the last 64 bits of a non-negative integer.</span><span>
-</span><span id="line-110"></span><span class="annot"><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-type">truncate64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The integer.</span><span>
-</span><span id="line-111"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The truncated integer.</span><span>
-</span><span id="line-112"></span><span id="truncate64"><span class="annot"><span class="annottext">truncate64 :: Integer -&gt; Integer
+</span><span id="line-107"></span><span>
+</span><span id="line-108"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-pragma hs-type">truncate64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- | Discard all but the last 64 bits of a non-negative integer.</span><span>
+</span><span id="line-111"></span><span class="annot"><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-type">truncate64</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The integer.</span><span>
+</span><span id="line-112"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-comment">-- ^ The truncated integer.</span><span>
+</span><span id="line-113"></span><span id="truncate64"><span class="annot"><span class="annottext">truncate64 :: Integer -&gt; Integer
 </span><a href="Plutus.OnChain.Random.html#truncate64"><span class="hs-identifier hs-var hs-var">truncate64</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
 </span><span class="hs-operator hs-var">`modulo`</span></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0x10000000000000000</span></span><span class="hs-special">)</span><span>
-</span><span id="line-113"></span></pre></body></html>
+</span><span id="line-114"></span></pre></body></html>

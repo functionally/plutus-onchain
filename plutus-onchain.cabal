@@ -1,7 +1,7 @@
 cabal-version     : 2.4
 name              : plutus-onchain
 description       : Miscellaneous functions for use in Plutus validators.
-version           : 0.1.1.0
+version           : 0.1.2.0
 author            : Brian W Bush <code@functionally.io>
 maintainer        : Brian W Bush <code@functionally.io>
 copyright         : (c) 2021 Brian W Bush

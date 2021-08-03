@@ -14,11 +14,13 @@
 
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE Trustworthy       #-}
 
 
 module Plutus.OnChain.Bits (
 -- * Functions
   xor
+, odd
 , even
 ) where
 
@@ -28,7 +30,7 @@ import PlutusTx.Prelude hiding (even)
 
 {-# INLINABLE xor #-}
 
--- | Compute the exclusive-or of two non-negative integers.
+-- | Compute the bitwise exclusive-or of two non-negative integers.
 xor :: Integer -- ^ The first integer.
     -> Integer -- ^ The second integer.
     -> Integer -- ^ The bitwise exclusive-or.
@@ -52,3 +54,11 @@ xor = xor' 1 0
 even :: Integer -- ^ The integer.
      -> Bool    -- ^ Whether the integer is even.
 even x = x `modulo` 2 == 0
+
+
+{-# INLINABLE odd #-}
+
+-- | Test whether a non-negative integer is odd.
+odd :: Integer -- ^ The integer.
+    -> Bool    -- ^ Whether the integer is odd.
+odd x = x `modulo` 2 == 1

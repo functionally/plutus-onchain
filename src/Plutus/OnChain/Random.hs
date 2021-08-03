@@ -15,6 +15,7 @@
 
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE Trustworthy       #-}
 
 
 module Plutus.OnChain.Random (
